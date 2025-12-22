@@ -12,8 +12,6 @@ app.get('/', (request, response) => {
   response.sendFile('index.html'); 
 });
 
-const CLIENT_ID = 'w0k0mhoxcw';
-const CLIENT_SECRET = 'tMUbOkTKwPTAsjw5FL8pVCwt1g178wLjgthFoBbM'
 const TRANSLATION_URL = 'https://papago.apigw.ntruss.com/nmt/v1/translation';
 const DETECT_URL = 'https://papago.apigw.ntruss.com/langs/v1/dect';
 
@@ -41,6 +39,8 @@ app.post('/detect', (request, response) => {
                   console.error(error.message);
               }
           });
+
+    // 다른 팀원이 작성한 코드..
 });
 
 /**

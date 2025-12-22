@@ -1,29 +1,66 @@
 import HTTP from 'superagent'; // superagent 모듈 불러오기
 
-const CLIENT_ID = 'w0k0mhoxcw';
-const CLIENT_SECRET = 'tMUbOkTKwPTAsjw5FL8pVCwt1g178wLjgthFoBbM'
-const TRANSLATION_URL = 'https://papago.apigw.ntruss.com/nmt/v1/translation';
+import dotenv from "dotenv";
 
-const data = {
-    source: "ko",
-    target: "ja",
-    text: "밥먹었니?"
+dotenv.config();
+
+// .env로 분리
+const CLIENT_ID = process.env.CLIENT_ID;
+const CLIENT_SECRET = process.env.CLIENT_SECRET;
+
+const TRANSLATION_URL = 'https://papago.apigw.ntruss.com/nmt/v1/translation';
+const DETECT_URL = 'https://papago.apigw.ntruss.com/langs/v1/dect';
+
+// **가 두개면 일반 주석과는 다른 문서화 용도의 주석
+
+/** 
+ * Papago 언어 감지 외부 API
+ * @param {Object} payload - 감지할 언어 텍스트, 예: { query: 'Hello' }
+ * @returns {Promise<Object>} - 감지된 언어값, 예: { langCode: 'en' }
+ */
+export async function detectLanguage(payload) {
+
+      const result = await HTTP
+                        .post(DETECT_URL) 
+                        .send(payload) 
+                        .set('Content-Type', 'application/json') 
+                        .set('x-ncp-apigw-api-key-id', CLIENT_ID)
+                        .set('x-ncp-apigw-api-key', CLIENT_SECRET);
+    return result.body;
 }
 
-// superagent를 활용한 엔드포인트 호출 코드
-HTTP
-    .post(TRANSLATION_URL) // 엔드포인트 주소 및 요청 메서드(POST)
-    .send(data) // 전송할 데이터
-    .set('Content-Type', 'application/json') // 헤더값 세팅
-    .set('x-ncp-apigw-api-key-id', CLIENT_ID)
-    .set('x-ncp-apigw-api-key', CLIENT_SECRET)
-    .end((error, result) => { // 응답받은 결과값 확인하고 처리
-        // error - 에러 메시지 정보가 담긴 객체
-        // result - 결과 데이터가 담긴 객체
+// 테스트용 코드(node api.js로 가볍게 실행할 때)
+// const result = detectLanguage({ query: 'Hello!' });
+// console.log(result);
 
-        if (result.statusCode === 200) { // 200 OK일 경우,
-            console.log(result.body); // body에서 결과값 추출
-        } else {
-            console.error(error.message); // 200 OK가 아닐 경우, 에러 메시지 출력
-        }
-    });
+export async function translate(payload) {
+    // Papago API 요청
+    const result = await HTTP
+        .post(TRANSLATION_URL)
+        .send(payload)
+        .set('Content-Type', 'application/json')
+        .set('x-ncp-apigw-api-key-id', CLIENT_ID)
+        .set('x-ncp-apigw-api-key', CLIENT_SECRET);
+
+    // Papago 응답 본문
+    const responseDataFromPapago = result.body;
+
+    // 필요한 데이터만 추출
+    const { // JS 객체 디스트럭처링 문법
+        srcLangType: detectedLanguage,
+        tarLangType: targetLanguage,
+        translatedText
+    } = responseDataFromPapago.message.result;
+
+    // 반환 포맷 구성
+    const responseData = {
+        detectedLanguage,
+        targetLanguage,
+        translatedText
+    };
+
+    return responseData;
+}
+
+// const result = translate({ text: '안녕', source: 'ko', target: 'en' })
+// console.log(result);

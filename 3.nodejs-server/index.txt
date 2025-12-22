@@ -1,0 +1,65 @@
+우리가 어떤 프로젝트를 개발한다는 건 크게 두 가지로 구분할 수 있음
+
+1. 직접 운영하는 웹 서비스
+ex. papago
+
+-> 웹 서비스는 Papago 기능이 동작하는 내부 소스 코드 자체(ex. server.js)를 제공하는 것은 아님
+
+웹 서비스는 코드 자체를 제공하는 것이 아니라 실제 사용자가 이용할 수 있는 SaaS로 비유할 수 있음
+* SaaS - Software as a Service의 줄임말
+
+SaaS의 예시??
+ex. Google Drive, Figma Web, Notion Web
+
+2. 자체 모듈(라이브러리)
+ex. superagent
+
+-> 다른 프로젝트에서 사용할 수 있도록 코드를 개발해서 잘 패키징해둔 모듈
+
+자체 모듈을 이용하는 실제 사용자는 일반인이 아니라 주로 개발자
+
+이러한 라이브러리를 이용하기 위해선 소스코드들이 잘 패키징된 모듈(라이브러리)을 다운받아서 설치하여 이용
+-> npm을 활용
+
+* npm - node package manager의 줄임말
+
+-------------------------
+package.json에서 주로 참고할 부분
+1. scripts
+
+node, react-scripts 등과 같이 개별 명령어를 직접 실행하는 것이 아니라,
+전 세계적으로 공통적으로 정해놓은 일련의 별칭(start, dev, test 등)을 통해 서버를 실행하거나 테스트함
+
+원래는 run을 앞에 붙여야함
+ex. npm (run) start..
+
+start 등의 일부 명령어는 run을 생략하고 실행할 수 있음
+그 외 다른 명령어들은 보통 run을 붙여서 사용
+
+2. dependencies(의존성)
+
+ex. package.json 예시
+"dependencies": {
+    "express": "^5.2.1",
+    "superagent": "^10.2.3"
+  }
+
+해당 프로젝트에서는 다음의 express, superagent 모듈을 사용하고 있고,
+만약 해당 프로젝트에 해당 모듈들에 대한 소스코드가 없으면
+프로젝트가 실행되거나 동작할 수 없음
+
+의존성?: 우리 프로젝트는 express와 superagent에 "의존하고 있다"
+
+* devDependencies
+개발 환경에서만 사용할 의존성들의 목록을 가리킴
+
+배포 환경에서 필요한 의존성들도 있음
+
+배포 환경 - 실제로 서비스가 운영되는 환경
+
+정리.
+배포 환경에서도 필요한 의존성들은 dependencies에 설치함
+개발 환경에서만 필요한 의존성들은 devDependencies에 설치함
+
+ex. 개발 환경에서만 필요한 의존성 중 하나?
+테스팅 라이브러리(ex. Cypress)

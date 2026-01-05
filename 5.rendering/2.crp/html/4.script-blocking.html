@@ -1,0 +1,41 @@
+<html lang='en'>
+
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Script Blocking</title>
+</head>
+
+<body>
+    <h1>🍏 apple: 1</h1>
+    <h1>🍏 apple: 2</h1>
+    <h1>🍏 apple: 3</h1>
+
+    <!-- script-blocking css -->
+    <!-- 
+        JS의 실행을 멈추게 하는 리소스 
+        26라인의 sample.js가 먼저 다운로드 되었어도, css가 모두 다운로드되어야 JS 코드가 실행됨
+
+        브라우저는 <script>를 실행할 때, 그 전에 <link ~>로 불러온 CSS가 아직 다운로드되지 않았을 경우,
+        해당 CSS 코드가 모두 다운로드되고 파싱될 때까지 JS의 실행을 지연시킴
+
+        따라서 <script> 자체는 파싱 작업을 차단하는 parser blocking 이지만,
+        그보다 앞선 CSS도 script의 실행을 차단시킬 수 있음(script-blocking)
+    
+    -->
+    
+    <link rel="stylesheet" href="http://localhost:3000/6000/css/h1-red.css" />
+
+    <!-- parser-blocking css -->
+    <script src="http://localhost:3000/js/sample.js"></script>
+
+    <h1>🍏 apple: 4</h1>
+    <h1>🍏 apple: 5</h1>
+    <h1>🍏 apple: 6</h1>
+    <h1>🍏 apple: 7</h1>
+    <h1>🍏 apple: 8</h1>
+    <h1>🍏 apple: 9</h1>
+    <h1>🍏 apple: 10</h1>
+</body>
+
+</html>
